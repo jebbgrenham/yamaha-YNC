@@ -1,5 +1,5 @@
-# yamaha-HTR-6295-RX-V2065
-Homeassistant files for controlling Yamaha Receivers using YNC (aka YNC1?). This is not the same as YNCA; and it's not the same as the more modern true REST interfaces on later recievers. It may work on other recievers of this era, but YNC seems to be largely an outlier for Yamaha.
+# Homeassistant integration for Yamaha HTR-6295 and RX-V2065
+Homeassistant files for controlling Yamaha Receivers using YNC (aka YNC1?). This is not the same as YNCA; and it's not the same as the more modern true REST interfaces on later recievers. It may work on other recievers of this era, but YNC seems to be largely an outlier for Yamaha. Not tested on RX-V2065 but should work. Tested on HTR-6295 running latest firmware.
 
 ## Useful? Info
 - Your XML tree is hopefully at http://[IP]/YamahaRemoteControl/UnitDesc.xml
