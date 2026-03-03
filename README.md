@@ -19,8 +19,12 @@ Homeassistant files for controlling Yamaha Receivers using YNC (aka YNC1?). This
 2. Append the configuration.yaml contents to your configuration.yaml
 3. Append the automations.yaml contents to your automations.yaml
 4. Append the scrips.yaml contents to your scripts.yaml
-5. In secrets.yaml, define your reciever ip:
+5. Copy the dashboard.yaml to a new custom dashboard
+6. In secrets.yaml, define your reciever ip:
 ```
 yamahaIP: "http://192.168.10.15"
 ```
+7. Restart HomeAssistant
+8. **IMPORTANT**: Your input list will start empty. You need to physically change the source selector on the reciever to EACH input and leave it there for 2-3 seconds. After cycling through all the inputs, dashboard will have a list of them all; AS you've named them using your reciever (ie; you may have renamed "AUDIO 1" to "CD Player". This custom name will appear in the list (once you've cycled to it)
+
 I think that's all, although I haven't bothered testing on a fresh install; I wrote this all in the production env.
