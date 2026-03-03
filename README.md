@@ -10,7 +10,12 @@ Homeassistant files for controlling Yamaha Receivers using YNC (aka YNC1?). This
 - https://github.com/thomasloven/lovelace-layout-card OR HACS "layout-card"
 
 ## Installation
-1. Add the helpers from this repo
+1. Add a helper to your HA install
+  - Name "Yamaha Volume Slider"
+  - Minimum -80.5
+  - Max 16.5
+  - Step Size 0.5
+  - Units: "dB"
 2. Append the configuration.yaml contents to your configuration.yaml
 3. Append the automations.yaml contents to your automations.yaml
 4. Append the scrips.yaml contents to your scripts.yaml
