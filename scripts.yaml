@@ -1,0 +1,21 @@
+#append scripts.yaml
+
+yamaha_tuner_preset_up:
+  alias: "Yamaha Preset Up"
+  sequence:
+    - service: rest_command.yamaha_tuner_set_preset
+      data:
+        # If at max (40), wrap to 1, else x+1
+        preset_number: >
+          {% set current = states('sensor.yamaha_tuner_preset') | int %}
+          {{ 1 if current >= 40 else current + 1 }}
+
+yamaha_tuner_preset_down:
+  alias: "Yamaha Preset Down"
+  sequence:
+    - service: rest_command.yamaha_tuner_set_preset
+      data:
+        # If at 1, wrap to 40, else x-1
+        preset_number: >
+          {% set current = states('sensor.yamaha_tuner_preset') | int %}
+          {{ 40 if current <= 1 else current - 1 }}
