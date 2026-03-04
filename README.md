@@ -4,7 +4,7 @@ Homeassistant files for controlling Yamaha Receivers using YNC (aka YNC1?). This
 ## Useful? Info
 - Your XML tree is hopefully at http://[IP]/YamahaRemoteControl/UnitDesc.xml
 - http://[IP]/XD/MrConnMgr.xml
-- http://[IP]/XD/DeviceDescription.xml
+- http://[IP]/XD/DeviceDescription.xml may be helpful for future development as it contains serial number so HA can see it as a unique device? 
 
 ## Dependencies
 - https://github.com/thomasloven/lovelace-layout-card OR HACS "layout-card"
