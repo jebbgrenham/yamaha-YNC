@@ -16,6 +16,7 @@ Homeassistant files for controlling Yamaha Receivers using YNC (aka YNC1?). This
   - Max 16.5
   - Step Size 0.5
   - Units: "dB"
+1b. Add a boolean (toggle) helper named "Yamaha Volume Lock"
 2. Append the configuration.yaml contents to your configuration.yaml
 3. Append the automations.yaml contents to your automations.yaml
 4. Append the scrips.yaml contents to your scripts.yaml
