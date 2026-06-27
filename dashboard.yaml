@@ -1,182 +1,352 @@
 # entire dashboard in YAML
 # REQUIRES https://github.com/thomasloven/lovelace-slider-entity-row (HACS layout-card)
 
-type: masonry
-path: test
-title: Yamaha Receiver
-cards:
-  - type: vertical-stack
+views:
+  - type: masonry
+    title: Yamaha Receiver
     cards:
-      - square: false
-        type: grid
+      - type: vertical-stack
         cards:
+          - square: false
+            type: grid
+            cards:
+              - type: conditional
+                conditions:
+                  - condition: state
+                    entity: sensor.yamaha_main_status
+                    state_not: 'On'
+                card:
+                  show_name: true
+                  show_icon: true
+                  type: button
+                  icon: mdi:power
+                  tap_action:
+                    action: call-service
+                    service: rest_command.yamaha_main_power
+                    data:
+                      status: 'On'
+                  show_state: false
+                  icon_height: 35px
+                  color: light-grey
+                  name: Power
+              - type: conditional
+                conditions:
+                  - condition: state
+                    entity: sensor.yamaha_main_status
+                    state: 'On'
+                card:
+                  show_name: true
+                  show_icon: true
+                  type: button
+                  icon: mdi:power
+                  tap_action:
+                    action: call-service
+                    service: rest_command.yamaha_main_power
+                    data:
+                      status: Standby
+                  show_state: false
+                  color: green
+                  name: Power
+                  icon_height: 35px
+            columns: 1
+          - type: horizontal-stack
+            cards:
+              - type: custom:button-card
+                name: ''
+                icon: mdi:volume-minus
+                size: 30%
+                hold_action:
+                  action: call-service
+                  service: script.yamaha_volume_step_and_lock
+                  data:
+                    direction: decrement
+                  repeat: 60
+                tap_action:
+                  action: call-service
+                  service: script.yamaha_volume_step_and_lock
+                  data:
+                    direction: decrement
+              - type: custom:button-card
+                entity: input_number.yamaha_volume_slider
+                name: Volume
+                show_name: true
+                show_icon: false
+                show_label: true
+                label: |
+                  [[[ 
+                    return Number(states['input_number.yamaha_volume_slider'].state).toFixed(1) + ' dB';
+                  ]]]
+                styles:
+                  card:
+                    - padding: 6px 0px
+                  name:
+                    - font-size: 13px
+                    - font-weight: normal
+                    - color: var(--secondary-text-color)
+                    - text-transform: uppercase
+                    - letter-spacing: 0.5px
+                  label:
+                    - font-size: 18px
+                    - font-weight: bold
+                    - color: var(--primary-color)
+                    - margin-top: 2px
+                tap_action:
+                  action: none
+              - type: custom:button-card
+                name: ''
+                icon: mdi:volume-plus
+                size: 30%
+                hold_action:
+                  action: call-service
+                  service: script.yamaha_volume_step_and_lock
+                  data:
+                    direction: increment
+                  repeat: 60
+                tap_action:
+                  action: call-service
+                  service: script.yamaha_volume_step_and_lock
+                  data:
+                    direction: increment
+          - type: entities
+            entities:
+              - entity: select.yamaha_source_selector
+                name: Source
+                icon: mdi:import
+              - entity: select.yamaha_sound_mode
+                name: EQ / DSP
+                secondary_info: none
+                icon: mdi:equalizer
+          - square: false
+            type: grid
+            columns: 4
+            cards:
+              - show_name: true
+                show_icon: true
+                type: button
+                name: Chromecast Projector
+                icon: mdi:projector-screen-outline
+                tap_action:
+                  action: call-service
+                  service: rest_command.yamaha_main_scene
+                  data:
+                    number: '1'
+              - show_name: true
+                show_icon: true
+                type: button
+                name: Record Player
+                icon: mdi:album
+                tap_action:
+                  action: call-service
+                  service: rest_command.yamaha_main_scene
+                  data:
+                    number: '2'
+              - show_name: true
+                show_icon: true
+                type: button
+                name: Bluetooth
+                icon: mdi:bluetooth
+                tap_action:
+                  action: call-service
+                  service: rest_command.yamaha_main_scene
+                  data:
+                    number: '3'
+              - show_name: true
+                show_icon: true
+                type: button
+                name: Tuner
+                icon: mdi:radio
+                tap_action:
+                  action: call-service
+                  service: rest_command.yamaha_main_scene
+                  data:
+                    number: '4'
           - type: conditional
             conditions:
               - condition: state
-                entity: sensor.yamaha_main_status
-                state_not: "On"
+                entity: select.yamaha_source_selector
+                state: TUNER
+            card:
+              type: entity
+              entity: sensor.yamaha_tuner_frequency
+              name: Tuner
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: select.yamaha_source_selector
+                state: TUNER
+            card:
+              square: false
+              type: grid
+              columns: 6
+              cards:
+                - show_name: true
+                  show_icon: true
+                  type: button
+                  icon: mdi:radio-fm
+                  name: FM
+                  tap_action:
+                    action: call-service
+                    service: rest_command.yamaha_tuner_band
+                    data:
+                      band: FM
+                - show_name: true
+                  show_icon: true
+                  type: button
+                  icon: mdi:radio-am
+                  name: AM
+                  tap_action:
+                    action: call-service
+                    service: rest_command.yamaha_tuner_band
+                    data:
+                      band: AM
+                - show_name: true
+                  show_icon: true
+                  type: button
+                  icon: mdi:minus-box
+                  name: Seek -
+                  tap_action:
+                    action: call-service
+                    service: rest_command.yamaha_tuner_freq_seek
+                    data:
+                      direction: Down
+                - show_name: true
+                  show_icon: true
+                  type: button
+                  icon: mdi:plus-box
+                  name: Seek +
+                  tap_action:
+                    action: call-service
+                    service: rest_command.yamaha_tuner_freq_seek
+                    data:
+                      direction: Up
+                - show_name: true
+                  show_icon: true
+                  type: button
+                  icon: mdi:skip-previous
+                  name: Preset -
+                  tap_action:
+                    action: call-service
+                    service: script.yamaha_tuner_preset_down
+                - show_name: true
+                  show_icon: true
+                  type: button
+                  icon: mdi:skip-next
+                  name: Preset +
+                  tap_action:
+                    action: call-service
+                    service: script.yamaha_tuner_preset_up
+          - type: conditional
+            conditions:
+              - condition: state
+                entity: select.yamaha_source_selector
+                state: BLUETOOTH
             card:
               show_name: true
               show_icon: true
               type: button
-              icon: mdi:power
+              entity: ''
+              name: Connect your Bluetooth to "T89"
+              icon: mdi:bluetooth-connect
               tap_action:
-                action: call-service
-                service: rest_command.yamaha_main_power
-                data:
-                  status: "On"
-              show_state: false
-              icon_height: 35px
-              color: light-grey
-              name: Power
+                action: none
+              icon_height: 40px
           - type: conditional
             conditions:
               - condition: state
-                entity: sensor.yamaha_main_status
-                state: "On"
+                entity: select.yamaha_source_selector
+                state: CHROMECAS
             card:
-              show_name: true
-              show_icon: true
-              type: button
-              icon: mdi:power
-              tap_action:
-                action: call-service
-                service: rest_command.yamaha_main_power
-                data:
-                  status: Standby
-              show_state: false
-              color: green
-              name: Power
-              icon_height: 35px
-        columns: 1
-      - type: entities
-        entities:
-          - entity: select.yamaha_source_selector
-            name: Source
-          - type: custom:slider-entity-row
-            entity: input_number.yamaha_volume_slider
-            name: " Volume"
-            icon: mdi:volume-high
-            full_row: true
-            update_immediately: true
-            step: 0.5
-            max: -15
-            hide_state: false
-            show_icon: true
-            hide_when_off: true
-            toggle: false
-          - entity: select.yamaha_sound_mode
-            name: DSP
-      - type: conditional
-        conditions:
-          - condition: state
-            entity: select.yamaha_source_selector
-            state: TUNER
-        card:
-          type: entity
-          entity: sensor.yamaha_tuner_frequency
-          name: Tuner
-      - square: false
-        type: grid
-        columns: 6
-        cards:
-          - show_name: true
-            show_icon: true
-            type: button
-            icon: mdi:radio-fm
-            name: FM
-            tap_action:
-              action: call-service
-              service: rest_command.yamaha_tuner_band
-              data:
-                band: FM
-          - show_name: true
-            show_icon: true
-            type: button
-            icon: mdi:radio-am
-            name: AM
-            tap_action:
-              action: call-service
-              service: rest_command.yamaha_tuner_band
-              data:
-                band: AM
-          - show_name: true
-            show_icon: true
-            type: button
-            icon: mdi:minus-box
-            name: Seek -
-            tap_action:
-              action: call-service
-              service: rest_command.yamaha_tuner_freq_seek
-              data:
-                direction: Down
-          - type: button
-            icon: mdi:plus-box
-            name: Seek +
-            tap_action:
-              action: call-service
-              service: rest_command.yamaha_tuner_freq_seek
-              data:
-                direction: Up
-          - show_name: true
-            show_icon: true
-            type: button
-            icon: mdi:skip-previous
-            name: Preset -
-            tap_action:
-              action: call-service
-              service: script.yamaha_tuner_preset_down
-          - show_name: true
-            show_icon: true
-            type: button
-            icon: mdi:skip-next
-            name: Preset +
-            tap_action:
-              action: call-service
-              service: script.yamaha_tuner_preset_up
-      - type: grid
-        columns: 4
-        square: false
-        title: Scenes
-        cards:
-          - show_name: true
-            show_icon: true
-            type: button
-            name: Chromecast Projector
-            icon: mdi:projector-screen-outline
-            tap_action:
-              action: call-service
-              service: rest_command.yamaha_main_scene
-              data:
-                number: "1"
-          - show_name: true
-            show_icon: true
-            type: button
-            name: Record Player
-            icon: mdi:album
-            tap_action:
-              action: call-service
-              service: rest_command.yamaha_main_scene
-              data:
-                number: "2"
-          - show_name: true
-            show_icon: true
-            type: button
-            name: Bluetooth
-            icon: mdi:bluetooth
-            tap_action:
-              action: call-service
-              service: rest_command.yamaha_main_scene
-              data:
-                number: "3"
-          - show_name: true
-            show_icon: true
-            type: button
-            name: Tuner
-            icon: mdi:radio
-            tap_action:
-              action: call-service
-              service: rest_command.yamaha_main_scene
-              data:
-                number: "4"
-badges: []
+              type: custom:ccwgtv-remote-card
+              title: null
+              scale: 1.2
+              up:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: DPAD_UP
+              down:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: DPAD_DOWN
+              left:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: DPAD_LEFT
+              right:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: DPAD_RIGHT
+              select:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: DPAD_CENTER
+              back:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: BACK
+              assistant:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: SEARCH
+              home:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: HOME
+              volume_mute:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: MUTE
+              youtube:
+                domain: remote
+                service: turn_on
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  activity: vnd.youtube.launch://
+              netflix:
+                domain: remote
+                service: turn_on
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  activity: org.jellyfin.androidtv
+              power:
+                domain: remote
+                service: toggle
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+              input:
+                domain: media_player
+                service: select_source
+                service_data:
+                  entity_id: media_player.attic_tv_super_edition
+                  source: LiveTV
+              volume_down:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: VOLUME_DOWN
+              volume_up:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: VOLUME_UP
+    badges: []
+    show_icon_and_title: false
