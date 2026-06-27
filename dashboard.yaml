@@ -54,18 +54,18 @@ views:
               - type: custom:button-card
                 name: ''
                 icon: mdi:volume-minus
-                size: 30%
+                size: 50%
                 hold_action:
                   action: call-service
-                  service: script.yamaha_volume_step_and_lock
-                  data:
-                    direction: decrement
+                  service: input_number.decrement
+                  target:
+                    entity_id: input_number.yamaha_volume_slider
                   repeat: 60
                 tap_action:
                   action: call-service
-                  service: script.yamaha_volume_step_and_lock
-                  data:
-                    direction: decrement
+                  service: input_number.decrement
+                  target:
+                    entity_id: input_number.yamaha_volume_slider
               - type: custom:button-card
                 entity: input_number.yamaha_volume_slider
                 name: Volume
@@ -79,14 +79,17 @@ views:
                 styles:
                   card:
                     - padding: 6px 0px
+                    - background-color: transparent
+                    - box-shadow: none
+                    - border: none
                   name:
-                    - font-size: 13px
+                    - font-size: 16px
                     - font-weight: normal
                     - color: var(--secondary-text-color)
                     - text-transform: uppercase
                     - letter-spacing: 0.5px
                   label:
-                    - font-size: 18px
+                    - font-size: 20px
                     - font-weight: bold
                     - color: var(--primary-color)
                     - margin-top: 2px
@@ -95,18 +98,18 @@ views:
               - type: custom:button-card
                 name: ''
                 icon: mdi:volume-plus
-                size: 30%
+                size: 50%
                 hold_action:
                   action: call-service
-                  service: script.yamaha_volume_step_and_lock
-                  data:
-                    direction: increment
+                  service: input_number.increment
+                  target:
+                    entity_id: input_number.yamaha_volume_slider
                   repeat: 60
                 tap_action:
                   action: call-service
-                  service: script.yamaha_volume_step_and_lock
-                  data:
-                    direction: increment
+                  service: input_number.increment
+                  target:
+                    entity_id: input_number.yamaha_volume_slider
           - type: entities
             entities:
               - entity: select.yamaha_source_selector
@@ -255,98 +258,6 @@ views:
               - condition: state
                 entity: select.yamaha_source_selector
                 state: CHROMECAS
-            card:
-              type: custom:ccwgtv-remote-card
-              title: null
-              scale: 1.2
-              up:
-                domain: remote
-                service: send_command
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-                  command: DPAD_UP
-              down:
-                domain: remote
-                service: send_command
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-                  command: DPAD_DOWN
-              left:
-                domain: remote
-                service: send_command
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-                  command: DPAD_LEFT
-              right:
-                domain: remote
-                service: send_command
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-                  command: DPAD_RIGHT
-              select:
-                domain: remote
-                service: send_command
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-                  command: DPAD_CENTER
-              back:
-                domain: remote
-                service: send_command
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-                  command: BACK
-              assistant:
-                domain: remote
-                service: send_command
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-                  command: SEARCH
-              home:
-                domain: remote
-                service: send_command
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-                  command: HOME
-              volume_mute:
-                domain: remote
-                service: send_command
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-                  command: MUTE
-              youtube:
-                domain: remote
-                service: turn_on
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-                  activity: vnd.youtube.launch://
-              netflix:
-                domain: remote
-                service: turn_on
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-                  activity: org.jellyfin.androidtv
-              power:
-                domain: remote
-                service: toggle
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-              input:
-                domain: media_player
-                service: select_source
-                service_data:
-                  entity_id: media_player.attic_tv_super_edition
-                  source: LiveTV
-              volume_down:
-                domain: remote
-                service: send_command
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-                  command: VOLUME_DOWN
-              volume_up:
-                domain: remote
-                service: send_command
-                service_data:
-                  entity_id: remote.attic_tv_super_edition
-                  command: VOLUME_UP
+
     badges: []
     show_icon_and_title: false
