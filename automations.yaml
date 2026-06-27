@@ -1,26 +1,28 @@
 # append to automations.yaml
 
-- alias: "Sync Slider to Yamaha"
-  id: "yamaha_vol_sync_to_unit"
+- alias: Sync Slider to Yamaha
+  id: yamaha_vol_sync_to_unit
   trigger:
     platform: state
     entity_id: input_number.yamaha_volume_slider
   action:
-    - service: rest_command.yamaha_main_set_volume
-      data:
-        # Multiplies the slider's -23.0 by 10 to send -230
-        volume: "{{ (states('input_number.yamaha_volume_slider') | float * 10) | int }}"
-
-- alias: "Sync Yamaha to Slider"
-  id: "yamaha_vol_sync_from_unit"
-  trigger:
-    platform: state
-    entity_id: sensor.yamaha_main_volume_raw
-  action:
-    - service: input_number.set_value
-      target:
-        entity_id: input_number.yamaha_volume_slider
-      data:
-        # Divides the unit's -230 by 10 to show -23.0 on the slider
-        value: "{{ states('sensor.yamaha_main_volume_raw') | float / 10 }}"
-
+  - service: rest_command.yamaha_main_set_volume
+    data:
+      volume: '{{ (states(''input_number.yamaha_volume_slider'') | float * 10) | int
+        }}'
+- id: yamaha_vol_sync_from_unit
+  alias: Sync Yamaha to Slider
+  triggers:
+  - entity_id: sensor.yamaha_main_volume_raw
+    trigger: state
+  conditions:
+  - condition: state
+    entity_id: input_boolean.yamaha_volume_lock
+    state:
+    - 'off'
+  actions:
+  - target:
+      entity_id: input_number.yamaha_volume_slider
+    data:
+      value: '{{ states(''sensor.yamaha_main_volume_raw'') | float / 10 }}'
+    action: input_number.set_value
