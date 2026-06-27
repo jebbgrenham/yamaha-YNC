@@ -18,22 +18,3 @@ yamaha_tuner_preset_down:
         %} {{ 40 if current <= 1 else current - 1 }}
 
         '
-yamaha_volume_step_and_lock:
-  alias: Yamaha Volume Step and Lock
-  mode: parallel
-  fields:
-    direction:
-      description: Either 'increment' or 'decrement'
-      example: increment
-  sequence:
-  - target:
-      entity_id: input_boolean.yamaha_volume_lock
-    action: homeassistant.turn_on
-  - target:
-      entity_id: input_number.yamaha_volume_slider
-    action: input_number.{{ direction }}
-  - delay: 0:00:01
-  - target:
-      entity_id: input_boolean.yamaha_volume_lock
-    action: homeassistant.turn_off
-  description: ''
