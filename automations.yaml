@@ -26,3 +26,19 @@
     data:
       value: '{{ states(''sensor.yamaha_main_volume_raw'') | float / 10 }}'
     action: input_number.set_value
+- id: yamaha_volume_lock_manager
+  alias: Yamaha Volume Lock Manager
+  description: Locks out reverse synchronization during rapid volume changes
+  triggers:
+  - entity_id: input_number.yamaha_volume_slider
+    trigger: state
+  conditions: []
+  actions:
+  - target:
+      entity_id: input_boolean.yamaha_volume_lock
+    action: input_boolean.turn_on
+  - delay: '0:00:01.500'
+  - target:
+      entity_id: input_boolean.yamaha_volume_lock
+    action: input_boolean.turn_off
+  mode: restart
