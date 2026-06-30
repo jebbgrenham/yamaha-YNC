@@ -57,24 +57,19 @@ views:
                 size: 50%
                 hold_action:
                   action: call-service
-                  service: input_number.decrement
-                  target:
-                    entity_id: input_number.yamaha_volume_slider
+                  service: rest_command.yamaha_volume_down
                   repeat: 60
                 tap_action:
                   action: call-service
-                  service: input_number.decrement
-                  target:
-                    entity_id: input_number.yamaha_volume_slider
+                  service: rest_command.yamaha_volume_down
               - type: custom:button-card
-                entity: input_number.yamaha_volume_slider
                 name: Volume
                 show_name: true
                 show_icon: false
                 show_label: true
                 label: |
                   [[[ 
-                    return Number(states['input_number.yamaha_volume_slider'].state).toFixed(1) + ' dB';
+                    return (parseInt(states['sensor.yamaha_main_volume_raw'].state) / 10).toFixed(1) + ' dB'; 
                   ]]]
                 styles:
                   card:
@@ -101,15 +96,11 @@ views:
                 size: 50%
                 hold_action:
                   action: call-service
-                  service: input_number.increment
-                  target:
-                    entity_id: input_number.yamaha_volume_slider
+                  service: rest_command.yamaha_volume_up
                   repeat: 60
                 tap_action:
                   action: call-service
-                  service: input_number.increment
-                  target:
-                    entity_id: input_number.yamaha_volume_slider
+                  service: rest_command.yamaha_volume_up
           - type: entities
             entities:
               - entity: select.yamaha_source_selector
@@ -258,6 +249,98 @@ views:
               - condition: state
                 entity: select.yamaha_source_selector
                 state: CHROMECAS
-
+            card:
+              type: custom:ccwgtv-remote-card
+              title: null
+              scale: 1.2
+              up:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: DPAD_UP
+              down:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: DPAD_DOWN
+              left:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: DPAD_LEFT
+              right:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: DPAD_RIGHT
+              select:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: DPAD_CENTER
+              back:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: BACK
+              assistant:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: SEARCH
+              home:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: HOME
+              volume_mute:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: MUTE
+              youtube:
+                domain: remote
+                service: turn_on
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  activity: vnd.youtube.launch://
+              netflix:
+                domain: remote
+                service: turn_on
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  activity: org.jellyfin.androidtv
+              power:
+                domain: remote
+                service: toggle
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+              input:
+                domain: media_player
+                service: select_source
+                service_data:
+                  entity_id: media_player.attic_tv_super_edition
+                  source: LiveTV
+              volume_down:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: VOLUME_DOWN
+              volume_up:
+                domain: remote
+                service: send_command
+                service_data:
+                  entity_id: remote.attic_tv_super_edition
+                  command: VOLUME_UP
     badges: []
     show_icon_and_title: false
