@@ -18,3 +18,23 @@ yamaha_tuner_preset_down:
         %} {{ 40 if current <= 1 else current - 1 }}
 
         '
+yamaha_volume_down:
+  sequence:
+  - action: rest_command.yamaha_volume_down
+  - action: rest_command.yamaha_volume_down #go 1dB instead of 0.5dB
+  - delay: '00:00:00.150'
+  - action: homeassistant.update_entity
+    target:
+      entity_id: sensor.yamaha_main_status
+  alias: Yamaha Volume Down
+  description: ''
+yamaha_volume_up:
+  sequence:
+  - action: rest_command.yamaha_volume_up
+  - action: rest_command.yamaha_volume_up
+  - delay: '00:00:00.150'
+  - action: homeassistant.update_entity
+    target:
+      entity_id: sensor.yamaha_main_status
+  alias: Yamaha Volume Up
+  description: ''
