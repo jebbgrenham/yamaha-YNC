@@ -1,5 +1,5 @@
 # entire dashboard in YAML
-# REQUIRES https://github.com/thomasloven/lovelace-slider-entity-row (HACS layout-card)
+# REQUIRES https://github.com/custom-cards/button-card (HACS available)
 
 
 views:
