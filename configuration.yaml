@@ -1,5 +1,7 @@
 # configuration.yaml contents (append)
 
+
+
 template:
   - trigger:
       - platform: state
@@ -89,7 +91,7 @@ rest:
     payload: '<YAMAHA_AV cmd="GET"><Main_Zone><Basic_Status>GetParam</Basic_Status></Main_Zone></YAMAHA_AV>'
     headers:
       Content-Type: "text/xml"
-    scan_interval: 2
+    scan_interval: 1
     sensor:
       - name: "Yamaha Main Status"
         value_template: "{{ value_json.YAMAHA_AV.Main_Zone.Basic_Status.Power_Control.Power }}"
@@ -135,6 +137,16 @@ rest_command:
     url: !secret yamahaIP
     method: POST
     payload: '<YAMAHA_AV cmd="PUT"><Main_Zone><Vol><Lvl><Val>{{ volume }}</Val><Exp>1</Exp><Unit>dB</Unit></Lvl></Vol></Main_Zone></YAMAHA_AV>'
+
+  yamaha_volume_down:
+    url: !secret yamahaIP
+    method: POST
+    payload: '<YAMAHA_AV cmd="PUT"><Main_Zone><Vol><Up_Down>Down</Up_Down></Vol></Main_Zone></YAMAHA_AV>'
+
+  yamaha_volume_up:
+    url: !secret yamahaIP
+    method: POST
+    payload: '<YAMAHA_AV cmd="PUT"><Main_Zone><Vol><Up_Down>Up</Up_Down></Vol></Main_Zone></YAMAHA_AV>'
 
   yamaha_main_mute:
     url: !secret yamahaIP
