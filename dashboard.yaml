@@ -1,6 +1,7 @@
 # entire dashboard in YAML
 # REQUIRES https://github.com/thomasloven/lovelace-slider-entity-row (HACS layout-card)
 
+
 views:
   - type: masonry
     title: Yamaha Receiver
@@ -57,11 +58,11 @@ views:
                 size: 50%
                 hold_action:
                   action: call-service
-                  service: rest_command.yamaha_volume_down
+                  service: script.yamaha_volume_down
                   repeat: 60
                 tap_action:
                   action: call-service
-                  service: rest_command.yamaha_volume_down
+                  service: script.yamaha_volume_down
               - type: custom:button-card
                 name: Volume
                 show_name: true
@@ -96,11 +97,11 @@ views:
                 size: 50%
                 hold_action:
                   action: call-service
-                  service: rest_command.yamaha_volume_up
+                  service: script.yamaha_volume_up
                   repeat: 60
                 tap_action:
                   action: call-service
-                  service: rest_command.yamaha_volume_up
+                  service: script.yamaha_volume_up
           - type: entities
             entities:
               - entity: select.yamaha_source_selector
