@@ -2,6 +2,20 @@
 
 
 
+
+# Loads default set of integrations. Do not remove.
+default_config:
+
+# Load frontend themes from the themes folder
+frontend:
+  themes: !include_dir_merge_named themes
+
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+# configuration.yaml contents
+
 template:
   - trigger:
       - platform: state
@@ -9,7 +23,6 @@ template:
     sensor:
       - name: "Yamaha Input Memory"
         unique_id: yamaha_input_memory_v5
-        # The state just shows a timestamp; the real data is in the attribute below
         state: "{{ now().isoformat() }}"
         attributes:
           input_map: >
@@ -23,6 +36,31 @@ template:
               {% set map = dict(map, **{id: title}) %}
             {% endif %}
             {{ map }}
+
+  # GLOBAL SAFEGUARD: Intercepts all source swaps and drops volume to -40dB, ignoring Chromecast
+  - trigger:
+      - platform: state
+        entity_id: sensor.yamaha_main_status
+        attribute: Input
+    binary_sensor:
+      - name: "Yamaha Global Volume Safeguard Trigger"
+        state: >
+          {% set input_attr = state_attr('sensor.yamaha_main_status', 'Input') %}
+          # Ensures the trigger toggles 'on' for any valid hardware input string detected
+          {{ 'on' if input_attr and input_attr.Input_Sel else 'off' }}
+        auto_off: "00:00:01" 
+    action:
+      - condition: template
+        value_template: >
+          {% set input_attr = state_attr('sensor.yamaha_main_status', 'Input') %}
+          
+          {% set chromecast_id = 'HDMI1' %}
+          
+          {# Only proceed if we have a valid input and it is NOT the Chromecast #}
+          {{ input_attr and input_attr.Input_Sel and input_attr.Input_Sel != chromecast_id }}
+      - action: rest_command.yamaha_main_set_volume
+        data:
+          volume: -400
 
   - select:
       - name: "Yamaha Source Selector"
@@ -38,6 +76,7 @@ template:
           {% set map = state_attr('sensor.yamaha_input_memory', 'input_map') %}
           {{ map.values() | list if map else ['TUNER'] }}
 
+        # Cleaned up and reverted back to its original stable repository structure
         select_option:
           - action: rest_command.yamaha_main_input
             data:
@@ -55,7 +94,6 @@ template:
 
       - name: "Yamaha Sound Mode"
         unique_id: yamaha_sound_mode_final
-        # Matches your curl response: <Surr><Pgm_Sel>
         state: >
           {% set surr = state_attr('sensor.yamaha_main_status', 'Surr') %}
           {{ surr.Pgm_Sel if surr else 'Standard' }}
@@ -200,4 +238,3 @@ rest_command:
     url: !secret yamahaIP
     method: POST
     payload: '<YAMAHA_AV cmd="PUT"><Main_Zone><Surr><Pgm_Sel>{{ dsp_name }}</Pgm_Sel></Surr></Main_Zone></YAMAHA_AV>'
-
